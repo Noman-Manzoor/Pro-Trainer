@@ -1,0 +1,29 @@
+
+
+@media screen and (max-width: 769px) {
+    .footerContainer {
+    justify-content: center !important;
+    align-items: center !important;
+    }
+
+    .footerSection{
+        text-align: center;
+    }
+    .socialIcons{
+        justify-content: center !important;
+        margin-bottom: 20px;
+    }
+    .sicialMediaDiv{
+        justify-content: center !important;
+    
+    }
+  }
+
+  @media screen and (max-width: 1007px) {
+    .rightSideQuestionDiv {
+    flex-wrap: wrap;
+    }
+
+    
+  }
+  
