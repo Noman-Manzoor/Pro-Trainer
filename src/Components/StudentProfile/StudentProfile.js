@@ -8,7 +8,7 @@ const initialState = {
   fullName: '',
   qualification: '',
   mobileNumber: '',
-  // isVerified: false,
+  isVerified: '',
   experience: '',
   learningInterestArea: [],
   newJob: '',
@@ -25,12 +25,54 @@ const initialState = {
 };
 export default function StudentProfile() {
   const [student, setStudent] = useState(initialState);
+  const [code, setCode] = useState({
+    status: false,
+    otp: '',
+  });
 
   const onClickHandler = () => {
     api
       .post('student/', student)
       .then((res) => {
         successToast(res.data?.data.message);
+      })
+      .catch((err) => {
+        errorToast(err?.response?.data.message);
+      });
+  };
+
+  const onVerificationCodeSend = () => {
+    api
+      .post('student/verify', {
+        mobileNumber: student.mobileNumber,
+      })
+      .then((res) => {
+        successToast(res.data?.data.message);
+        setCode({
+          ...code,
+          status: true,
+        });
+      })
+      .catch((err) => {
+        errorToast(err?.response?.data.message);
+      });
+  };
+  const onVerifyCode = () => {
+    api
+      .post('student/verify/code', {
+        mobileNumber: student.mobileNumber,
+        code: code.otp,
+      })
+      .then((res) => {
+        successToast(res.data?.data.message);
+        setStudent({
+          ...student,
+          isVerified: res.data.data.status,
+        });
+        setCode({
+          status: false,
+          otp: '',
+        });
       })
       .catch((err) => {
         errorToast(err?.response?.data.message);
@@ -111,29 +153,71 @@ export default function StudentProfile() {
                 <div>
                   <h6 className='mb-0 pb-1'>
                     Mobile Number{' '}
-                    <a href='#' className='text-decoration-none'>
-                      OTP Validation
-                    </a>
+                    {code.status ? (
+                      <span
+                        style={{
+                          cursor: 'pointer',
+                          color: '#0d6efd',
+                        }}
+                        onClick={onVerifyCode}
+                        className='text-decoration-none'
+                      >
+                        Verify Code
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          cursor: 'pointer',
+                          color: '#0d6efd',
+                        }}
+                        onClick={onVerificationCodeSend}
+                        className='text-decoration-none'
+                      >
+                        OTP Validation
+                      </span>
+                    )}
                   </h6>
-                  <input
-                    className=' bgColor3'
-                    type='text'
-                    name=''
-                    placeholder='+923176866425'
-                    style={{
-                      outline: 'none',
-                      border: 'none',
-                      borderBottom: '1px solid grey',
-                      width: '94%',
-                    }}
-                    value={student.mobileNumber}
-                    onChange={(e) => {
-                      setStudent({
-                        ...student,
-                        mobileNumber: e.target.value,
-                      });
-                    }}
-                  />
+                  {code.status ? (
+                    <input
+                      className=' bgColor3'
+                      type='text'
+                      name=''
+                      placeholder='+923176866425'
+                      style={{
+                        outline: 'none',
+                        border: 'none',
+                        borderBottom: '1px solid grey',
+                        width: '94%',
+                      }}
+                      value={code.otp}
+                      onChange={(e) => {
+                        setCode({
+                          ...code,
+                          otp: e.target.value,
+                        });
+                      }}
+                    />
+                  ) : (
+                    <input
+                      className=' bgColor3'
+                      type='text'
+                      name=''
+                      placeholder='+923176866425'
+                      style={{
+                        outline: 'none',
+                        border: 'none',
+                        borderBottom: '1px solid grey',
+                        width: '94%',
+                      }}
+                      value={student.mobileNumber}
+                      onChange={(e) => {
+                        setStudent({
+                          ...student,
+                          mobileNumber: e.target.value,
+                        });
+                      }}
+                    />
+                  )}
                 </div>
               </div>
               <div className='col-md-6'>
