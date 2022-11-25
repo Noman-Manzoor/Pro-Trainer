@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     mobileNumber: {
-      type: Number,
+      type: String,
       required: true,
     },
     isVerified: {

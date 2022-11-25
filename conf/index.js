@@ -1,2 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/website');
+mongoose.connect(
+  'mongodb+srv://RajaSabiq:Joker170@cluster0.ntvkl02.mongodb.net/demo?retryWrites=true&w=majority'
+);
