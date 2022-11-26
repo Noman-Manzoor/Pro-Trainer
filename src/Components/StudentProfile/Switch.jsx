@@ -9,6 +9,7 @@ const Switch = ({
   valueKey = '',
   width,
   padding,
+  dotColor,
 }) => {
   return (
     <SwitchContainer width={width} padding={padding}>
@@ -16,14 +17,24 @@ const Switch = ({
         onClick={() => setValue({ ...value, [valueKey]: yesTitle })}
         isActive={value[valueKey]?.match(yesTitle)}
       >
-        <div className='mt-2 mx-2 questionDot2'></div>
+        <div
+          style={{
+            backgroundColor: dotColor,
+          }}
+          className='mt-2 mx-2 questionDot2'
+        ></div>
         <span>{yesTitle}</span>
       </SwitchYes>
       <SwitchNo
         onClick={() => setValue({ ...value, [valueKey]: noTitle })}
         isActive={value[valueKey].match(noTitle)}
       >
-        <div className='mt-2 mx-2 questionDot2'></div>
+        <div
+          style={{
+            backgroundColor: dotColor,
+          }}
+          className='mt-2 mx-2 questionDot2'
+        ></div>
         <span>{noTitle}</span>
       </SwitchNo>
     </SwitchContainer>

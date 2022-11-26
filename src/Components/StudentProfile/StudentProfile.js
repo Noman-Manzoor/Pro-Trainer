@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../../utils/api';
 import { errorToast, successToast } from '../../utils/toast';
+import { fullNameValidation, phoneValidation } from '../../utils/validation';
 import './StudentProfile.css';
 import Switch from './Switch';
+import Select from 'react-select';
 
 const initialState = {
   fullName: '',
@@ -23,8 +25,11 @@ const initialState = {
   trainingRequirement: '',
   learningNewLetter: '',
 };
+
 export default function StudentProfile() {
   const [student, setStudent] = useState(initialState);
+  const [err, setErr] = useState(initialState);
+
   const [code, setCode] = useState({
     status: false,
     otp: '',
@@ -40,6 +45,19 @@ export default function StudentProfile() {
         errorToast(err?.response?.data.message);
       });
   };
+  const [category, setCategory] = useState([]);
+
+  useEffect(() => {
+    api.get('student/category').then((res) => {
+      const { data } = res;
+      setCategory(
+        data.data.map((item, index) => ({
+          value: item._id,
+          label: item.name,
+        }))
+      );
+    });
+  }, []);
 
   const onVerificationCodeSend = () => {
     api
@@ -115,12 +133,21 @@ export default function StudentProfile() {
                     }}
                     value={student.fullName}
                     onChange={(e) => {
+                      setErr({
+                        ...err,
+                        fullName: fullNameValidation(e.target.value)
+                          ? ''
+                          : 'Invalid full name',
+                      });
                       setStudent({
                         ...student,
                         fullName: e.target.value,
                       });
                     }}
-                  />
+                  />{' '}
+                  <span style={{ fontSize: '12px', color: 'red' }}>
+                    {err.fullName}
+                  </span>
                 </div>
               </div>
               <div className='col-md-6'>
@@ -138,6 +165,13 @@ export default function StudentProfile() {
                     }}
                     value={student.qualification}
                     onChange={(e) => {
+                      setErr({
+                        ...err,
+                        qualification:
+                          e.target.value !== ''
+                            ? ''
+                            : 'Qualification cant be empty',
+                      });
                       setStudent({
                         ...student,
                         qualification: e.target.value,
@@ -145,6 +179,9 @@ export default function StudentProfile() {
                     }}
                   />
                 </div>
+                <span style={{ fontSize: '12px', color: 'red' }}>
+                  {err.qualification}
+                </span>
               </div>
             </div>
 
@@ -200,7 +237,7 @@ export default function StudentProfile() {
                   ) : (
                     <input
                       className=' bgColor3'
-                      type='text'
+                      type='number'
                       name=''
                       placeholder='+923176866425'
                       style={{
@@ -211,6 +248,12 @@ export default function StudentProfile() {
                       }}
                       value={student.mobileNumber}
                       onChange={(e) => {
+                        setErr({
+                          ...err,
+                          mobileNumber: phoneValidation(e.target.value)
+                            ? ''
+                            : 'Invalid Format',
+                        });
                         setStudent({
                           ...student,
                           mobileNumber: e.target.value,
@@ -218,6 +261,9 @@ export default function StudentProfile() {
                       }}
                     />
                   )}
+                  <span style={{ fontSize: '12px', color: 'red' }}>
+                    {err.mobileNumber}
+                  </span>
                 </div>
               </div>
               <div className='col-md-6'>
@@ -228,6 +274,7 @@ export default function StudentProfile() {
                     setValue={setStudent}
                     value={student}
                     valueKey={'experience'}
+                    dotColor={'#ece8ff'}
                   />
                 </div>
               </div>
@@ -369,8 +416,27 @@ export default function StudentProfile() {
 
             <div className='InterestCard text-white py-3 my-4 px-3'>
               <h5 className='px-2'>Learning Interest Area: </h5>
-              <div className='d-flex justify-content-around align-items-center'>
-                <select
+              <div
+                style={{
+                  gap: '10px',
+                }}
+                className='d-flex justify-content-around align-items-center'
+              >
+                <Select
+                  className='flex-1 w-100 black selectOption'
+                  onChange={(e) => {
+                    console.log(e);
+                    setStudent({
+                      ...student,
+                      learningInterestArea: [
+                        ...student.learningInterestArea,
+                        e.label,
+                      ],
+                    });
+                  }}
+                  options={category}
+                />
+                {/* <select
                   className=' InterestCardbg text-white'
                   style={{
                     outline: 'none',
@@ -392,7 +458,7 @@ export default function StudentProfile() {
                   <option value='python'>Python</option>
                   <option value='java'>Java</option>
                   <option value='c++'>C++</option>
-                </select>
+                </select> */}
                 <div>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -499,6 +565,7 @@ export default function StudentProfile() {
                       value={student}
                       valueKey={'haveLaptop'}
                       padding={'3px 5px'}
+                      dotColor={'#ece8ff'}
                     />
                   </div>
                 </div>
@@ -541,6 +608,7 @@ export default function StudentProfile() {
                       value={student}
                       valueKey={'haveBroadband'}
                       padding={'3px 5px'}
+                      dotColor={'#ece8ff'}
                     />
                   </div>
                 </div>
@@ -589,6 +657,7 @@ export default function StudentProfile() {
                     value={student}
                     valueKey={'notification'}
                     padding={'3px 5px'}
+                    dotColor={'#ece8ff'}
                   />
                 </div>
               </div>
@@ -630,6 +699,7 @@ export default function StudentProfile() {
                     value={student}
                     valueKey={'newGroup'}
                     padding={'3px 5px'}
+                    dotColor={'#ece8ff'}
                   />
                 </div>
               </div>
@@ -666,6 +736,7 @@ export default function StudentProfile() {
                     value={student}
                     valueKey={'trainingRequirement'}
                     padding={'3px 5px'}
+                    dotColor={'#ece8ff'}
                   />
                 </div>
               </div>
@@ -700,6 +771,7 @@ export default function StudentProfile() {
                     value={student}
                     valueKey={'learningNewLetter'}
                     padding={'3px 5px'}
+                    dotColor={'#ece8ff'}
                   />
                 </div>
               </div>
