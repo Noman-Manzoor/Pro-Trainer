@@ -1,3 +1,15 @@
-const { createStudent, sendVerifyCode, verifyCode } = require('./students');
+const {
+  createStudent,
+  sendVerifyCode,
+  verifyCode,
+  getCategory,
+  addCategory,
+} = require('./students');
 
-module.exports = { createStudent, sendVerifyCode, verifyCode };
+module.exports = {
+  createStudent,
+  sendVerifyCode,
+  verifyCode,
+  getCategory,
+  addCategory,
+};

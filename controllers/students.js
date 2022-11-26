@@ -1,4 +1,4 @@
-const { students, verification } = require('../models');
+const { students, verification, category } = require('../models');
 
 const client = require('twilio')(
   'ACea108d59a90a554f0a9a1e399911f01d',
@@ -154,4 +154,43 @@ exports.verifyCode = async (req, res) => {
       },
     });
   }
+};
+
+exports.getCategory = async (req, res) => {
+  const data = await category.find();
+  res.status(200).send({
+    data,
+  });
+};
+
+exports.addCategory = (req, res) => {
+  if (
+    Object.keys(req.body).length == 0 ||
+    !Object.values(req.body).every((i) => i)
+  ) {
+    return res.status(500).send({
+      success: false,
+      message: 'category is incomplete',
+    });
+  }
+  const data = new category(req.body);
+  data
+    .save()
+    .then(() => {
+      res.status(200).send({
+        success: false,
+        data: {
+          message: 'successfully added',
+        },
+      });
+    })
+    .catch((e) => {
+      res.status(400).send({
+        success: false,
+        data: {
+          message: 'Unable to store data',
+          reason: e,
+        },
+      });
+    });
 };
