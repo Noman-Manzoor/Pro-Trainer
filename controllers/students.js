@@ -2,7 +2,7 @@ const { students, verification, category } = require('../models');
 
 const client = require('twilio')(
   'ACea108d59a90a554f0a9a1e399911f01d',
-  '9a8a6a2f5ad446f04e9d2ddc741a8515'
+  '2478e5a2a00541bac9c3180ac27fcfab'
 );
 
 exports.createStudent = (req, res) => {
@@ -70,13 +70,18 @@ exports.sendVerifyCode = async (req, res) => {
             to: `whatsapp:${mobileNumber}`,
           })
           .then((message) => {
-            res.status(200).send(message);
+            res.status(200).send({
+              success: true,
+              data: {
+                message: 'Successfully send code to phone number',
+              },
+            });
           })
           .catch((err) =>
             res.status(400).send({
               success: false,
               data: {
-                message: 'Unable to create student',
+                message: 'Unable to send verification code to student',
                 reason: err,
               },
             })
