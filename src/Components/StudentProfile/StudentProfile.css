@@ -23,6 +23,19 @@
   height: 12px;
   background-color: #411a9e;
 }
+.phoneNumberInput {
+  padding: 10px 0;
+}
+#react-select-3-listbox > div {
+  max-height: 150px;
+}
+#react-select-3-listbox > div::-webkit-scrollbar {
+  display: none;
+}
+.phoneNumberInput input {
+  outline: none !important;
+  border: none !important;
+}
 .selectOption div {
   color: black !important;
 }

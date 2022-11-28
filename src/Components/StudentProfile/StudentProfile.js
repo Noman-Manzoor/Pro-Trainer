@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import PhoneInput, { formatPhoneNumber } from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import Select from 'react-select';
+import { PulseLoader, ScaleLoader } from 'react-spinners';
 import api from '../../utils/api';
 import { errorToast, successToast } from '../../utils/toast';
-import { fullNameValidation, phoneValidation } from '../../utils/validation';
+import { fullNameValidation } from '../../utils/validation';
 import './StudentProfile.css';
 import Switch from './Switch';
-import Select from 'react-select';
 
 const initialState = {
   fullName: '',
@@ -28,6 +31,10 @@ const initialState = {
 
 export default function StudentProfile() {
   const [student, setStudent] = useState(initialState);
+  const [loading, setLoading] = useState({
+    opt: false,
+    submit: false,
+  });
   const [err, setErr] = useState(initialState);
 
   const [code, setCode] = useState({
@@ -36,12 +43,28 @@ export default function StudentProfile() {
   });
 
   const onClickHandler = () => {
+    if (loading.submit) {
+      return;
+    }
+    setLoading({
+      ...loading,
+      submit: true,
+    });
+
     api
       .post('student/', student)
       .then((res) => {
+        setLoading({
+          ...loading,
+          submit: false,
+        });
         successToast(res.data?.data.message);
       })
       .catch((err) => {
+        setLoading({
+          ...loading,
+          submit: false,
+        });
         errorToast(err?.response?.data.message);
       });
   };
@@ -60,11 +83,19 @@ export default function StudentProfile() {
   }, []);
 
   const onVerificationCodeSend = () => {
+    setLoading({
+      ...loading,
+      opt: true,
+    });
     api
       .post('student/verify', {
         mobileNumber: student.mobileNumber,
       })
       .then((res) => {
+        setLoading({
+          ...loading,
+          opt: false,
+        });
         successToast(res.data?.data.message);
         setCode({
           ...code,
@@ -72,16 +103,28 @@ export default function StudentProfile() {
         });
       })
       .catch((err) => {
+        setLoading({
+          ...loading,
+          opt: false,
+        });
         errorToast(err?.response?.data.message);
       });
   };
   const onVerifyCode = () => {
+    setLoading({
+      ...loading,
+      opt: true,
+    });
     api
       .post('student/verify/code', {
         mobileNumber: student.mobileNumber,
         code: code.otp,
       })
       .then((res) => {
+        setLoading({
+          ...loading,
+          opt: false,
+        });
         successToast(res.data?.data.message);
         setStudent({
           ...student,
@@ -93,6 +136,11 @@ export default function StudentProfile() {
         });
       })
       .catch((err) => {
+        setLoading({
+          ...loading,
+          opt: false,
+        });
+        console.log(err);
         errorToast(err?.response?.data.message);
       });
   };
@@ -185,12 +233,21 @@ export default function StudentProfile() {
               </div>
             </div>
 
-            <div className='row mt-5 mb-3'>
+            <div className='row mb-3'>
               <div className='col-md-6 mb-3'>
                 <div>
                   <h6 className='mb-0 pb-1'>
                     Mobile Number{' '}
-                    {code.status ? (
+                    {student.isVerified ? (
+                      <span
+                        style={{
+                          cursor: 'pointer',
+                          color: '#0d6efd',
+                        }}
+                      >
+                        Verified
+                      </span>
+                    ) : code.status ? (
                       <span
                         style={{
                           cursor: 'pointer',
@@ -210,7 +267,8 @@ export default function StudentProfile() {
                         onClick={onVerificationCodeSend}
                         className='text-decoration-none'
                       >
-                        OTP Validation
+                        OTP Validation{' '}
+                        {loading.opt && <PulseLoader color='#36d7b7' />}
                       </span>
                     )}
                   </h6>
@@ -219,7 +277,7 @@ export default function StudentProfile() {
                       className=' bgColor3'
                       type='text'
                       name=''
-                      placeholder='+923176866425'
+                      placeholder='****'
                       style={{
                         outline: 'none',
                         border: 'none',
@@ -235,39 +293,73 @@ export default function StudentProfile() {
                       }}
                     />
                   ) : (
-                    <input
-                      className=' bgColor3'
-                      type='number'
-                      name=''
-                      placeholder='+923176866425'
+                    <PhoneInput
+                      placeholder='Enter phone number'
+                      value={student.mobileNumber}
+                      onChange={(e) => {
+                        if (student.isVerified) {
+                          return;
+                        }
+                        setErr({
+                          ...err,
+                          mobileNumber: formatPhoneNumber(e)
+                            ? ''
+                            : 'Invalid Format',
+                        });
+                        setStudent({
+                          ...student,
+                          mobileNumber: e,
+                        });
+                      }}
+                      className='phoneNumberInput'
                       style={{
                         outline: 'none',
                         border: 'none',
                         borderBottom: '1px solid grey',
                         width: '94%',
                       }}
-                      value={student.mobileNumber}
-                      onChange={(e) => {
-                        setErr({
-                          ...err,
-                          mobileNumber: phoneValidation(e.target.value)
-                            ? ''
-                            : 'Invalid Format',
-                        });
-                        setStudent({
-                          ...student,
-                          mobileNumber: e.target.value,
-                        });
-                      }}
                     />
+
+                    // <input
+                    //   className=' bgColor3'
+                    //   type='number'
+                    //   name=''
+                    //   placeholder='+923176866425'
+                    //   style={{
+                    //     outline: 'none',
+                    //     border: 'none',
+                    //     borderBottom: '1px solid grey',
+                    //     width: '94%',
+                    //   }}
+                    //   value={student.mobileNumber}
+                    //   onChange={(e) => {
+                    //     setErr({
+                    //       ...err,
+                    //       mobileNumber: phoneValidation(e.target.value)
+                    //         ? ''
+                    //         : 'Invalid Format',
+                    //     });
+                    //     setStudent({
+                    //       ...student,
+                    //       mobileNumber: e.target.value,
+                    //     });
+                    //   }}
+                    // />
                   )}
                   <span style={{ fontSize: '12px', color: 'red' }}>
                     {err.mobileNumber}
                   </span>
                 </div>
               </div>
-              <div className='col-md-6'>
-                <div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'end',
+                }}
+                className='col-md-6'
+              >
+                <div className='me-3'>
                   <Switch
                     yesTitle='fresher'
                     noTitle='experienced'
@@ -384,7 +476,8 @@ export default function StudentProfile() {
                 <h6>Profile completed(Good)</h6>
                 <h6>
                   {Math.round(
-                    (Object.values(student).filter((i) => i.length > 0).length *
+                    (Object.values(student).filter((i) => i?.length > 0)
+                      ?.length *
                       100) /
                       16
                   )}
@@ -396,16 +489,16 @@ export default function StudentProfile() {
                   className={`primaryColor2  text-center`}
                   style={{
                     width: `${
-                      (Object.values(student).filter((i) => i.length > 0)
-                        .length *
+                      (Object.values(student).filter((i) => i?.length > 0)
+                        ?.length *
                         100) /
                       16
                     }%`,
                   }}
                 >
                   <span style={{ visibility: 'hidden' }}>
-                    {(Object.values(student).filter((i) => i.length > 0)
-                      .length *
+                    {(Object.values(student).filter((i) => i?.length > 0)
+                      ?.length *
                       100) /
                       16}
                     %
@@ -424,6 +517,7 @@ export default function StudentProfile() {
               >
                 <Select
                   className='flex-1 w-100 black selectOption'
+                  defaultMenuIsOpen={true}
                   onChange={(e) => {
                     console.log(e);
                     setStudent({
@@ -782,7 +876,7 @@ export default function StudentProfile() {
             <button
               disabled={
                 Math.round(
-                  (Object.values(student).filter((i) => i.length > 0).length *
+                  (Object.values(student).filter((i) => i?.length > 0)?.length *
                     100) /
                     16
                 ) < 100
@@ -790,8 +884,13 @@ export default function StudentProfile() {
               onClick={onClickHandler}
               type='button'
               class='actionBtn1  mx-2 text-white'
+              style={{
+                display: 'flex',
+                gap: '10px',
+              }}
             >
               Submit
+              {loading.submit && <ScaleLoader height={20} color='#fff' />}
             </button>
             <button
               onClick={() => setStudent(initialState)}
