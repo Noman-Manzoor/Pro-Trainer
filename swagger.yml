@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  title: 'Demo '
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+paths:
+  /api/student/verify:
+    post:
+      tags:
+        - default
+      summary: Send Otp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                mobileNumber: '+923047867718'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/student/verify/code:
+    post:
+      tags:
+        - default
+      summary: Verify Otp code
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                mobileNumber: '+923047867718'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/student/category:
+    get:
+      tags:
+        - default
+      summary: Get category
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - default
+      summary: Add category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Working
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/student:
+    post:
+      tags:
+        - default
+      summary: Add student
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                fullName: Raja Sabqi
+                qualification: asdhaksjdh
+                mobileNumber: '+923047867718'
+                isVerified: 'true'
+                experience: fresher
+                learningInterestArea:
+                  - Java
+                  - Java
+                  - C++
+                  - Powershell
+                  - Java
+                  - Python
+                newJob: 'no'
+                jobSwitch: 'no'
+                switchTechnology: 'no'
+                betterHike: 'no'
+                upSkilling: 'no'
+                haveLaptop: 'yes'
+                haveBroadband: 'yes'
+                notification: 'yes'
+                newGroup: 'yes'
+                trainingRequirement: 'yes'
+                learningNewLetter: 'yes'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

@@ -1,0 +1,90 @@
+{
+	"info": {
+		"_postman_id": "4026fd61-f0dc-4cef-8388-6295a3b29a31",
+		"name": "Demo ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Send Otp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mobileNumber\":\"+923047867718\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5000/api/student/verify"
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Otp code",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mobileNumber\":\"+923047867718\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5000/api/student/verify/code"
+			},
+			"response": []
+		},
+		{
+			"name": "Get category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5000/api/student/category"
+			},
+			"response": []
+		},
+		{
+			"name": "Add category",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Working\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5000/api/student/category"
+			},
+			"response": []
+		},
+		{
+			"name": "Add student",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fullName\": \"Raja Sabqi\",\r\n    \"qualification\": \"asdhaksjdh\",\r\n    \"mobileNumber\": \"+923047867718\",\r\n    \"isVerified\": \"true\",\r\n    \"experience\": \"fresher\",\r\n    \"learningInterestArea\": [\r\n        \"Java\",\r\n        \"Java\",\r\n        \"C++\",\r\n        \"Powershell\",\r\n        \"Java\",\r\n        \"Python\"\r\n    ],\r\n    \"newJob\": \"no\",\r\n    \"jobSwitch\": \"no\",\r\n    \"switchTechnology\": \"no\",\r\n    \"betterHike\": \"no\",\r\n    \"upSkilling\": \"no\",\r\n    \"haveLaptop\": \"yes\",\r\n    \"haveBroadband\": \"yes\",\r\n    \"notification\": \"yes\",\r\n    \"newGroup\": \"yes\",\r\n    \"trainingRequirement\": \"yes\",\r\n    \"learningNewLetter\": \"yes\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5000/api/student"
+			},
+			"response": []
+		}
+	]
+}
