@@ -517,7 +517,6 @@ export default function StudentProfile() {
               >
                 <Select
                   className='flex-1 w-100 black selectOption'
-                  defaultMenuIsOpen={true}
                   onChange={(e) => {
                     console.log(e);
                     setStudent({

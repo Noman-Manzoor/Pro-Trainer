@@ -74,6 +74,7 @@
 .InterestCard {
   border-radius: 10px;
   background-color: #796ebd;
+  max-height: 250px;
 }
 .addBtn {
   background-color: #ece8ff;

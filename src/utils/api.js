@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // baseURL: 'https://api.nomain.rajasabiq.me/api/',
-  baseURL: 'http://localhost:5000/api/',
+  baseURL: 'http://api.dev.zencoachers.com/api/',
+  // baseURL: 'http://localhost:5000/api/',
 });
 
 api.interceptors.request.use((request) => {
